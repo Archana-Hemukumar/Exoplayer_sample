@@ -6,68 +6,26 @@
     android:layout_height="match_parent"
     tools:context="com.example.tringappsadmin.exoplayer_sample.ExoPlayerActivity">
 
-
-    <!--<com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/exo_player_view">
-
-    </com.google.android.exoplayer2.ui.SimpleExoPlayerView>-->
-
     <Button
-        android:id="@+id/small_screen"
+        android:id="@+id/enable_cc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="small_screen"
+        android:text="Enable cc"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/full_screen"
+        android:id="@+id/disable_cc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:text="full_screen"
-        app:layout_constraintLeft_toRightOf="@+id/small_screen" />
+        android:text="Disable cc"
+        app:layout_constraintLeft_toRightOf="@+id/enable_cc" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/small_screen" />
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/exoplayerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        android:layout_height="match_parent" />
 
 
 </android.support.constraint.ConstraintLayout>
-
-    <!--
-
-    <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
-    <EditText
-        android:layout_marginTop="15dp"
-        android:layout_width="match_parent"
-        android:id="@+id/mediaPath"
-        android:layout_height="56dp" />
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/play"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_below="@+id/mediaPath"
-        android:background="@color/colorAccent"
-        android:layout_width="match_parent"
-        android:text="Play"
-        android:layout_height="56dp" />
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:layout_below="@+id/play"
-        android:id="@+id/video_view"
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    </RelativeLayout>-->
