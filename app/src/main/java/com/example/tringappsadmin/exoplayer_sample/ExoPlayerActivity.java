@@ -1,11 +1,14 @@
 package com.example.tringappsadmin.exoplayer_sample;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.support.v7.app.AppCompatActivity;
 
@@ -47,23 +50,25 @@ public class ExoPlayerActivity extends AppCompatActivity implements VideoRendere
     private MappingTrackSelector mappingTrackSelector;
     private android.support.v7.widget.Toolbar toolbar;
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exoplayer);
 
+
         enableCc = (Button) findViewById(R.id.enable_cc);
         disableCc = (Button) findViewById(R.id.disable_cc);
-        fullScreen=(Button) findViewById(R.id.full_screen);
-        smallScreen=(Button) findViewById(R.id.small_screen);
-        toolbar= (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        fullScreen = (Button) findViewById(R.id.full_screen);
+        smallScreen = (Button) findViewById(R.id.small_screen);
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
 
         enableCc.setOnClickListener(this);
         disableCc.setOnClickListener(this);
         fullScreen.setOnClickListener(this);
         smallScreen.setOnClickListener(this);
 
-setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         mappingTrackSelector = new DefaultTrackSelector();
 
@@ -131,6 +136,35 @@ setSupportActionBar(toolbar);
 
         player.setPlayWhenReady(true);
         player.setVideoDebugListener(this);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        switch (newConfig.orientation) {
+
+            case Configuration.ORIENTATION_LANDSCAPE:
+                toolbar.setVisibility(View.GONE);
+//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                simpleExoPlayerView.setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                break;
+
+            case Configuration.ORIENTATION_PORTRAIT:
+                toolbar.setVisibility(View.VISIBLE);
+//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                simpleExoPlayerView.setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+                break;
+        }
+
     }
 
 
@@ -220,22 +254,37 @@ setSupportActionBar(toolbar);
                 break;
 
             case R.id.full_screen:
-                toolbar.setVisibility(View.GONE);
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                simpleExoPlayerView.setSystemUiVisibility(
-                                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                              |   View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                                         |View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_FULLSCREEN);
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 
+                    toolbar.setVisibility(View.GONE);
+//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    simpleExoPlayerView.setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN);
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                }else{
+
+                    toolbar.setVisibility(View.GONE);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    simpleExoPlayerView.setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN);
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                }
                 break;
 
             case R.id.small_screen:
-                toolbar.setVisibility(View.VISIBLE);
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                simpleExoPlayerView.setSystemUiVisibility(
-                       View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                               |View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    toolbar.setVisibility(View.VISIBLE);
+//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    simpleExoPlayerView.setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                }
 
                 break;
         }
@@ -247,15 +296,19 @@ setSupportActionBar(toolbar);
 
     @Override
     public void onBackPressed() {
-
-        toolbar.setVisibility(View.VISIBLE);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        simpleExoPlayerView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        |View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            toolbar.setVisibility(View.VISIBLE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            simpleExoPlayerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+        } else {
+            finish();
+        }
 
 
     }
+
+
 }
 
 
