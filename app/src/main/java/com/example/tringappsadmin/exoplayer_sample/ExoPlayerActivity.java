@@ -1,6 +1,6 @@
 package com.example.tringappsadmin.exoplayer_sample;
 
-import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +8,7 @@ import android.view.Surface;
 import android.view.View;
 import android.widget.Button;
 import android.support.v7.app.AppCompatActivity;
+
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -42,8 +43,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements VideoRendere
     private static final String TAG = "MainActivity";
     private SimpleExoPlayerView simpleExoPlayerView;
     private SimpleExoPlayer player;
-    private Button enableCc, disableCc;
+    private Button enableCc, disableCc, fullScreen, smallScreen;
     private MappingTrackSelector mappingTrackSelector;
+    private android.support.v7.widget.Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +54,16 @@ public class ExoPlayerActivity extends AppCompatActivity implements VideoRendere
 
         enableCc = (Button) findViewById(R.id.enable_cc);
         disableCc = (Button) findViewById(R.id.disable_cc);
+        fullScreen=(Button) findViewById(R.id.full_screen);
+        smallScreen=(Button) findViewById(R.id.small_screen);
+        toolbar= (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
 
         enableCc.setOnClickListener(this);
         disableCc.setOnClickListener(this);
+        fullScreen.setOnClickListener(this);
+        smallScreen.setOnClickListener(this);
+
+setSupportActionBar(toolbar);
 
         mappingTrackSelector = new DefaultTrackSelector();
 
@@ -167,32 +176,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements VideoRendere
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            simpleExoPlayerView.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        }
-    }
-
-    @SuppressLint("InlinedApi")
-    private void hideSystemUi() {
-        simpleExoPlayerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-    }
-
-
-
-    @Override
     protected void onStop() {
         super.onStop();
         Log.v(TAG, "onStop()...");
@@ -207,7 +190,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements VideoRendere
     @Override
     protected void onResume() {
         super.onResume();
-        hideSystemUi();
         Log.v(TAG, "onResume()...");
     }
 
@@ -236,6 +218,26 @@ public class ExoPlayerActivity extends AppCompatActivity implements VideoRendere
                 mappingTrackSelector.setRendererDisabled(2, true);
                 mappingTrackSelector.clearSelectionOverrides();
                 break;
+
+            case R.id.full_screen:
+                toolbar.setVisibility(View.GONE);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                simpleExoPlayerView.setSystemUiVisibility(
+                                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                              |   View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                         |View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+                break;
+
+            case R.id.small_screen:
+                toolbar.setVisibility(View.VISIBLE);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                simpleExoPlayerView.setSystemUiVisibility(
+                       View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                               |View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+
+                break;
         }
     }
 
@@ -243,6 +245,17 @@ public class ExoPlayerActivity extends AppCompatActivity implements VideoRendere
     public void onCues(List<Cue> cues) {
     }
 
+    @Override
+    public void onBackPressed() {
+
+        toolbar.setVisibility(View.VISIBLE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        simpleExoPlayerView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        |View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+
+
+    }
 }
 
 

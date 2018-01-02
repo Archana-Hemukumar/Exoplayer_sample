@@ -1,31 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.tringappsadmin.exoplayer_sample.ExoPlayerActivity">
 
+    <include layout="@layout/layout_toolbar"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/buttonsLayout"
+    android:layout_below="@+id/toolbar">
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        android:id="@+id/exoplayerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <Button
         android:id="@+id/enable_cc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enable cc"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        android:text="Enable cc"/>
     <Button
         android:id="@+id/disable_cc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:text="Disable cc"
-        app:layout_constraintLeft_toRightOf="@+id/enable_cc" />
+        android:layout_toRightOf="@+id/enable_cc" />
 
-
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/exoplayerView"
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/full_screen"
+android:layout_below="@+id/enable_cc"
+        android:text="full_screen"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/small_screen"
+        android:layout_below="@+id/disable_cc"
+        android:layout_toRightOf="@id/full_screen"
+        android:text="small_screen"/>
+</RelativeLayout>
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:id="@+id/exoplayerLayout"
+        android:layout_below="@id/buttonsLayout">
 
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
+
+</LinearLayout>
